@@ -1,0 +1,31 @@
+#################################################
+# Syntax Coloring Map for KyneoBoard.h
+#################################################
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+#KyneoBoard
+SD_CS_PIN		LITERAL1
+
+GNSS_RX2		LITERAL1
+GNSS_TX2		LITERAL1
+GNSS_1PPS		LITERAL1
+GNSS_EN_PIN		LITERAL1
+GNSS_3DFIX		LITERAL1
+
+XBEE_SLEEP		LITERAL1
+XBEE_CTS		LITERAL1
+XBEE_RSSI		LITERAL1
+
+BATT_LEVEL_PIN	LITERAL1
+BATT_ADC_CH		LITERAL1
+
+GP_LED_0		LITERAL1
+GP_LED_1		LITERAL1
+
+VCC				LITERAL1
+
+BATT_RTOP		LITERAL1
+BATT_RBOTTOM	LITERAL1

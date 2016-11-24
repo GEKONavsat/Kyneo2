@@ -1,0 +1,27 @@
+#################################################
+# Syntax Coloring Map for KyneoUtils
+#################################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+KyneoUtils	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+rssi			KEYWORD2
+battInit		KEYWORD2
+battLevel		KEYWORD2
+version			KEYWORD2
+auxRssi			KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+KYNEOGNSS_DEBUG		LITERAL1
+KYNEOGNSS_VERSION	LITERAL1
+TIMEOUT				LITERAL1

@@ -1,0 +1,35 @@
+#################################################
+# Syntax Coloring Map for NMEApaser
+#################################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+NMEAparser			KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+getutime			KEYWORD2
+gettime				KEYWORD2
+getdate				KEYWORD2
+getlat				KEYWORD2
+getlon				KEYWORD2
+getalt				KEYWORD2
+gethdg				KEYWORD2
+NMEATimeToUnixTime	KEYWORD2
+NMEACoordToDegrees	KEYWORD2
+parseNMEA			KEYWORD2
+parseRMC			KEYWORD2
+parseGGA			KEYWORD2
+parseGLL			KEYWORD2
+shortString			KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+HDOP_TH				LITERAL1
+MAX_NMEA_SIZE		LITERAL1
