@@ -1,5 +1,5 @@
 # GEKONavsat Hardware Specification for Arduino
-This repository holds all the files for GEKO 3rd party Arduino-compatible board Kyneo (version 1).
+This repository holds all the files for GEKO 3rd party Arduino-compatible board Kyneo v2 (12MHz, Vcc 3.3V).
 The repository is structured following the recommendations in arduino.cc
 
 Instructions:
