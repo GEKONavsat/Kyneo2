@@ -32,6 +32,7 @@
 #include <KyneoGNSS.h>
 
 KyneoGNSS gnss;
+char c;
 
 void setup()
 {
@@ -46,7 +47,8 @@ void setup()
 void loop()
 {
   while(Serial1.available()){
-    Serial.print(gnss.read());
+    c = Serial1.read();
+    Serial.print(c);
   }
 }
 
