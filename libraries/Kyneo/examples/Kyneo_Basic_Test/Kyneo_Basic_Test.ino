@@ -19,6 +19,8 @@
 #include <KyneoBoard.h>
 #include <KyneoUtils.h>
 
+KyneoUtils util;
+
 void setup()
 {
   boardInit();            // Initialize batt measeurement and LEDs as outputs
@@ -28,13 +30,13 @@ void setup()
 void loop()
 {
   Serial.print("Battery level (mV): ");
-  Serial.println(battLevel());          // Vbattery in mV. 
+  Serial.println(util.battLevel());          // Vbattery in mV. 
   knightrider(300);                     // Funny LEDs testing (choose your prefered delay time)
 }
 
 void boardInit()
 {
-  battInit();                       // Initializes battery measurement
+  util.battInit();                       // Initializes battery measurement
   pinMode(GP_LED_0, OUTPUT);        // Digital output 0
   pinMode(GP_LED_1, OUTPUT);        // Digital output 1
 }
