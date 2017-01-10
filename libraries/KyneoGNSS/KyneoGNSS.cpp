@@ -46,7 +46,7 @@ int KyneoGNSS::version(){
 
 /**
  * \fn <setDfltConfig()>
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Restores the default configuration, sending the suitable commands.}
  * \return {void}
  */
@@ -60,7 +60,7 @@ void KyneoGNSS::setDfltConfig()
 
 /**
  * \fn <restart(uint8_t start_mode)>
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Sends the restart command regarding the requested start mode}
  * \param <start_mode> {Use the defined HOT/WARM/COLD/FULL_COLD start macros. Check Gms-g9 doc.}
  * \return {void}
@@ -128,7 +128,7 @@ void disable() { digitalWrite(GNSS_EN_PIN, LOW); }
 
 /**
  * \fn <setBaudrate(uint32_t bauds)>
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Sends command PMTK251 for setting NMEA serial port rate.}
  * \param <bauds> {The desired baudrate. Valid values are 4800,9600,14400,19200,38400,57600,115200}
  * \return {void}
@@ -168,7 +168,7 @@ void KyneoGNSS::setBaudrate(uint32_t bauds)
  * \brief {Retrieves baudrate from main object parameter.}
  * \return {baudrate}
  */
-uint32_t getBaudrate() { return baudrate; }
+uint32_t KyneoGNSS::getBaudrate() { return baudrate; }
 
 /**
  * \fn <sendCommand(char *cmd)>
@@ -237,7 +237,7 @@ void KyneoGNSS::DportInit(uint32_t bauds)
 
 /**
  * \fn <setDPortBaudrate(uint8_t modeIn, uint8_t modeOut, uint32_t bauds)>
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Sends command PMTK251 for setting NMEA serial port rate.}
  * \param <bauds> {The desired baudrate. Valid values are 4800,9600,14400,19200,38400,57600,115200}
  * \return {void}
@@ -268,7 +268,7 @@ int8_t KyneoGNSS::setDPortBaudrate(uint8_t modeIn, uint8_t modeOut, uint32_t bau
  * \brief {Retrieves DportSerial baudrate from main object parameter.}
  * \return {DportBaudrate}
  */
-uint32_t getDportBaudrate() { return DportBaudrate; }
+uint32_t KyneoGNSS::getDportBaudrate() { return DportBaudrate; }
 
 /**
  * \fn <DportFlush()>
@@ -276,7 +276,7 @@ uint32_t getDportBaudrate() { return DportBaudrate; }
  * \brief {Flushes DporSerial buffer.}
  * \return {void}
  */
-void DportFlush() { return DportSerial.flush(); }
+void KyneoGNSS::DportFlush() { return DportSerial.flush(); }
 
 /**
  * \fn <DportAvailable()>
@@ -284,7 +284,7 @@ void DportFlush() { return DportSerial.flush(); }
  * \brief {Sends the number of chars available to be read from the DportSerial buffer.}
  * \return {char}
  */
-char DportAvailable() { return DportSerial.available(); }
+char KyneoGNSS::DportAvailable() { return DportSerial.available(); }
 
 /**
  * \fn <DportRead()>
@@ -292,7 +292,7 @@ char DportAvailable() { return DportSerial.available(); }
  * \brief {Returns the first char from the DportSerial buffer.}
  * \return {char}
  */
-char DportRead() { return DportSerial.read(); }
+char KyneoGNSS::DportRead() { return DportSerial.read(); }
 
 /**
  * \fn <DportWrite()>
@@ -300,7 +300,7 @@ char DportRead() { return DportSerial.read(); }
  * \brief {Sends a char via the DportSerial port.}
  * \return {char}
  */
-char DportWrite(uint8_t byte) { return DportSerial.write(byte); }
+char KyneoGNSS::DportWrite(uint8_t byte) { return DportSerial.write(byte); }
 
 
 /**
@@ -309,7 +309,7 @@ char DportWrite(uint8_t byte) { return DportSerial.write(byte); }
  * \brief {Sends a char* via the DportSerial port (same as DportWrite).}
  * \return {char}
  */
-char DportPrint(const char* buf) { return DportSerial.print(buf); }
+char KyneoGNSS::DportPrint(const char* buf) { return DportSerial.print(buf); }
 
 /**
  * \fn <DportPrintln()>
@@ -325,7 +325,7 @@ char DportPrintln(const char* buf);
  
 /**
  * \fn <setFixRate(uint16_t fixRate)>
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Sends command PMTK220 for setting fix frequency (update rate).}
  * \param <updateRate> {The desired rate in milliseconds. Valid values range from 100 to 10000.}
  * \return {void}		
@@ -358,16 +358,16 @@ int8_t KyneoGNSS::setFixRate(uint16_t fixRate)
 
 /**
  * \fn <getFixRate(uint16_t fixRate)>
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Retrieves the fix frequency value in ms (update rate).}
  * \param <none>
  * \return {uint16_t}		
  */
-uint16_t getFixRate() { return fixRate_ms; }
+uint16_t KyneoGNSS::getFixRate() { return fixRate_ms; }
 
 /**
  * \fn <setNMEAOutput(uint8_t GPGLL, uint8_t GPRMC, uint8_t GPVTG, uint8_t GPGGA, uint8_t GPGSA, uint8_t GPGSV, uint8_t PMTKCHN)>
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Sends command PMTK314 for setting NMEA output.}
  * \param <GPGLL> {GPGLL sentence: 0 disabled, >1 to set each NMEA sentence rate divider.}
  * \param <GPRMC> {GPRMC/GNRMC (GPS/GPS+GLONASS) sentence: 0 disabled, >1 desired rate divider.}
@@ -438,7 +438,7 @@ int8_t KyneoGNSS::setNMEAOutput(uint8_t GPGLL, uint8_t GPRMC, uint8_t GPVTG, uin
 
 /**
  * \fn <DisNMEAOutput()>
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Sends command PMTK314 for setting no NMEA output from GNSS Module.}
  * \return {3 if no error}
  */
@@ -460,7 +460,7 @@ int8_t KyneoGNSS::DisNMEAOutput(){
 
 /**
  * \fn <setSearchMode(uint8_t GPS_EN, uint8_t GLONASS_EN)>
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Configures the receiver to start searching selected GNSS satellites.}
  * \param <GPS_EN> {GPS enabled (>0) or disabled (0)}
  * \param <GLONASS_EN> {GLONASS enabled (>0) or disabled (0)}
@@ -499,7 +499,7 @@ int8_t KyneoGNSS::setSearchMode(uint8_t GPS_EN, uint8_t GLONASS_EN)
 
 /**
  * \fn <SetDGPSMode(uint8_t mode)>
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Disable SBAS DGPS Correction}
  * \param
  * \return {int8_t: Command response from GNSS Module}
@@ -517,7 +517,7 @@ int8_t KyneoGNSS::SetDGPSMode(uint8_t mode){
 
 /**
  * \fn <getDGPSMode()>
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Query DGPS mode of the GNSS module}
  * \param {none}
  * \return {int8_t: DGPS code mode, or 4 if Timeout happened}
@@ -563,7 +563,7 @@ int8_t KyneoGNSS::getDGPSMode(){
 
 /**
  * \fn <setRTCMConfig()>
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Set RTCM configuration (and disables SBAS congig, since they are incompatible).}
  * \return {3 if everything OK, 4 if some timeout happened. Any other value means error}
  */
@@ -589,7 +589,7 @@ int8_t KyneoGNSS::setRTCMConfig(uint32_t bauds){
 
 /**
  * \fn <EnSBAS()>
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Enable SBAS DGPS Correction}
  * \param
  * \return {int8_t: Command response from GNSS Module}
@@ -605,7 +605,7 @@ int8_t KyneoGNSS::EnSBAS(){
 
 /**
  * \fn <DisSBAS()>
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Disable SBAS DGPS Correction}
  * \param
  * \return {int8_t: Command response from GNSS Module}
@@ -621,7 +621,7 @@ int8_t KyneoGNSS::DisSBAS(){
 
 /**
  * \fn <checkSBASEnable()>
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Ask to GNSS module if SBAS is enabled}
  * \param
  * \return {int8_t: Command response from GNSS Module}
@@ -637,7 +637,7 @@ int8_t KyneoGNSS::checkSBASEnable(){
 
 /**
  * \fn <setSBASConfig()>
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Set SBAS configuration (and disables RTCM congig, since they are incompatible.}
  * \return {3 if everything OK, 4 if some timeout happened. Any other value means error}
  */
@@ -667,7 +667,7 @@ int8_t KyneoGNSS::setSBASConfig(){
 
 /**
  * \fn <getSingleNMEA()> (not overload function)
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Gets next NMEA frame transmitted from GNSS module.}
  * \param Char buffer where the NMEA frame is going to be written.
  * \return calls AuxGetSingleNMEA() with default timeout value
@@ -678,7 +678,7 @@ int KyneoGNSS::getSingleNMEA(char *frame, int length){
 
 /**
  * \fn <getSingleNMEA()>  (overload function)
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Gets next NMEA frame transmitted from GNSS module.}
  * \param Char buffer where the NMEA frame is going to be written.
  * \return calls AuxGetSingleNMEA() with user assigned timeout value
@@ -688,43 +688,8 @@ int KyneoGNSS::getSingleNMEA(char *frame, int length, unsigned int timeout){
 }
 
 /**
- * \fn <AuxGetSingleNMEA()>  (overload function)
- * \pre {}
- * \brief {Gets next NMEA frame transmitted from GNSS module.}
- * \param *frame - Char buffer where the NMEA frame is going to be written.
- *  	  length - sizeof frame
- *        timeout - max time waiting for an NMEA frame to come
- * \return {int} negative if overflow occurred, positive if the NMEA frame was written correctly, zero means timeout without receving full NMEA frame yet
- */
-int KyneoGNSS::AuxGetSingleNMEA(char *frame, int length, unsigned int timeout){
-	int pos=0, frameON=0, eot=0;
-	char c;
-	unsigned int now = 0;
-	
-	now = millis();
-			
-	while( (frameON == 0) && (eot==0) ){
-		if( Serial1.available() ){
-			c = Serial1.read();
-			frame[pos++] = c;
-			
-			if(c == '\n'){								// end of NMEA frame found
-				frame[pos] = (char)0;
-				frameON = 1;
-			}else if(pos > length){						// overflow occurred
-				frameON = -1;
-			}
-		}
-		
-		if( ( millis() - now ) > timeout ) eot = 1;		// timeout ended without response
-	}
-	
-	return (pos * frameON);								// positive OK, negative means overflow, zero means no record and timeout
-}
-
-/**
  * \fn <getNMEAtype()> (limitted by timeout and number of frames)
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Gets next NMEA frame transmitted from GNSS module.}
  * \param Char buffer where the NMEA frames are going to be written.
  * \return number of frames written to the frame (only whole NMEA frames)
@@ -746,7 +711,7 @@ int KyneoGNSS::getNMEAtype(char *frame, int length, char *type){
 
 /**
  * \fn 		<getNMEAlatlon()>
- * \pre 	{}
+ * \pre 	{GNSS software serial must be initialised first.}
  * \brief 	{Gets next NMEA frame transmitted from GNSS module and writes it if it's RMC, GGA or GLL.}
  * \param 	Char buffer where the NMEA frames are going to be written.
  * \return 	0 if frame it not valid, 3 if it's valid
@@ -770,7 +735,7 @@ int KyneoGNSS::getNMEAlatlon(char *frame, int length){
 
 /**
  * \fn <getGSV()> (limitted by timeout and number of frames)
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Gets next NMEA frame transmitted from GNSS module.}
  * \param Char buffer where the NMEA frames are going to be written.
  * \return number of frames written to the frame (only whole NMEA frames)
@@ -792,7 +757,7 @@ int KyneoGNSS::getGSV(char *frame, int length){
 
 /**
  * \fn <getGSA()> (limitted by timeout and number of frames)
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Gets next NMEA frame transmitted from GNSS module.}
  * \param Char buffer where the NMEA frames are going to be written.
  * \return number of frames written to the frame (only whole NMEA frames)
@@ -814,7 +779,7 @@ int KyneoGNSS::getGSA(char *frame, int length){
 
 /**
  * \fn <getVTG()> (limitted by timeout and number of frames)
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Gets next NMEA frame transmitted from GNSS module.}
  * \param Char buffer where the NMEA frames are going to be written.
  * \return number of frames written to the frame (only whole NMEA frames)
@@ -836,7 +801,7 @@ int KyneoGNSS::getVTG(char *frame, int length){
 
 /**
  * \fn <getGLL()> (limitted by timeout and number of frames)
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Gets next NMEA frame transmitted from GNSS module.}
  * \param Char buffer where the NMEA frames are going to be written.
  * \return number of frames written to the frame (only whole NMEA frames)
@@ -858,7 +823,7 @@ int KyneoGNSS::getGLL(char *frame, int length){
 
 /**
  * \fn <getGGA()> (limitted by timeout and number of frames)
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Gets next NMEA frame transmitted from GNSS module.}
  * \param Char buffer where the NMEA frames are going to be written.
  * \return number of frames written to the frame (only whole NMEA frames)
@@ -880,7 +845,7 @@ int KyneoGNSS::getGGA(char *frame, int length){
 
 /**
  * \fn <getRMC()> (limitted by timeout and number of frames)
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Gets next NMEA frame transmitted from GNSS module.}
  * \param Char buffer where the NMEA frames are going to be written.
  * \return number of frames written to the frame (only whole NMEA frames)
@@ -902,7 +867,7 @@ int KyneoGNSS::getRMC(char *frame, int length){
 
 /**
  * \fn <getNMEA()> (limitted by timeout and number of frames)
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Gets next NMEA frame transmitted from GNSS module.}
  * \param Char buffer where the NMEA frames are going to be written.
  * \return number of frames written to the frame (only whole NMEA frames)
@@ -913,7 +878,7 @@ int KyneoGNSS::getNMEA(char *frame, int length){
 
 /**
  * \fn <getNMEA()> (overload function)
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Gets all NMEA frames transmitted from GNSS module inside the defined timeout window.}
  * \param Char buffer where the NMEA frames are going to be written.
  * \return number of chars written to the frame (only whole NMEA frames)
@@ -924,7 +889,7 @@ int KyneoGNSS::getNMEA(char *frame, int length, unsigned int timeout, int numFra
 
 /**
  * \fn 		<getLatLon()>
- * \pre 	{}
+ * \pre 	{GNSS software serial must be initialised first.}
  * \brief 	{Gets all NMEA frames transmitted from GNSS module inside the defined timeout window.}
  * \param 	Char buffer where the NMEA frames are going to be written.
  * \return 	number of chars written to the frame (only whole NMEA frames)
@@ -1122,7 +1087,7 @@ int8_t KyneoGNSS::checkResponse(char *x){
 
 /**
  * \fn <AuxGetSingleNMEA()>  (overload function)
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Gets next NMEA frame transmitted from GNSS module.}
  * \param *frame - Char buffer where the NMEA frame is going to be written.
  *  	  length - sizeof frame
@@ -1157,7 +1122,7 @@ int KyneoGNSS::AuxGetSingleNMEA(char *frame, int length, unsigned int timeout){
 
 /**
  * \fn <AuxGetNMEA()> (limitted by timeout and number of frames)
- * \pre {}
+ * \pre {GNSS software serial must be initialised first.}
  * \brief {Gets all NMEA frames transmitted from GNSS module inside the defined timeout window.}
  * \param Char buffer where the NMEA frames are going to be written.
  * \return number of chars written to the frame (only whole NMEA frames)

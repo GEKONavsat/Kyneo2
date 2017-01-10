@@ -157,7 +157,7 @@ class KyneoGNSS{
 		SoftwareSerial	DportSerial;			// Software serial port to communicate with GNSS Module Dport (RTCM) (before it was GNSSerial)
 		NMEAparser 		nmea;					// nmea object to use the NMEAparser library
 		
-		uint32_t 		DportBaudrate			// Software serial port baudrate (RTCM)
+		uint32_t 		DportBaudrate;			// Software serial port baudrate (RTCM)
 		uint32_t 		baudrate;				// Main port baudrate
 		
 		uint16_t 		fixRate_ms;				// Fix Interval in milliseconds. From 100 (10 Hz) to 10000 (0.1 Hz) or 0 (disabled).
