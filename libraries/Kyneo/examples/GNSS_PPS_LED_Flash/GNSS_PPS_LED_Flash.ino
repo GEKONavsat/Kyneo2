@@ -20,8 +20,9 @@
 void setup()
 {
   Serial.begin(9600);               // Choose your preferred baudrate here.
-  pinMode(GNSS_1PPS, OUTPUT);       // Configure PPS signal pin as input
+  pinMode(GNSS_1PPS, INPUT);       // Configure PPS signal pin as input
   pinMode(GP_LED_0, OUTPUT);        // Configure LED0 as output
+  Serial.println("Setup done...");
 }
 
 void loop()
