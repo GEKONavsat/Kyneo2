@@ -41,7 +41,8 @@ FreeIMU kyneoMARG = FreeIMU();
 void setup()
 {
   Serial.begin(9600);
-  FreeIMUinit(); 
+  FreeIMUinit();
+  Serial.println("Setup done\n");
 }
 
 void loop()
@@ -49,7 +50,6 @@ void loop()
   counter++;
   if(counter == 10){              // Prints column titles every 10 lines
     counter = 0;
-    Serial.println("Setup done\n");
     Serial.println("acc_x\tacc_y\tacc_z\tgyr_x\tgyr_y\tgyr_z\tmag_x\tmag_y\tmag_z\tTemp\tAlt");  
   }
   
