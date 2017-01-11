@@ -25,11 +25,12 @@
 class KyneoUtils{
 	public:
 		KyneoUtils();
-		unsigned long rssi();		// XBee RSSI value in us (from a maximum of 64us)
-		unsigned long rssi(int k);	// XBee RSSI value refered to "k" (tipically k = 100 or k = 1000)
-		void battInit();			// Initialices battery measurement (Ref. Voltage 2.56V)
-		float battLevel();			// Returns battery level (mV)
-		int version();				// returns library version
+		unsigned long rssi();										// XBee RSSI value in us (from a maximum of 64us)
+		unsigned long rssi(int k);									// XBee RSSI value refered to "k" (tipically k = 100 or k = 1000)
+		void battInit();											// Initialices battery measurement (Ref. Voltage 2.56V)
+		float battLevel();											// Returns battery level (mV)
+		float analogReadwithRef(int analogRef, int analogChannel); 	// Returns analog measure on indicated channel (mV)
+		int version();												// returns library version
 		
 	private:
 		unsigned long auxRssi(uint8_t pin, unsigned long timeout);		// general rssi measure function

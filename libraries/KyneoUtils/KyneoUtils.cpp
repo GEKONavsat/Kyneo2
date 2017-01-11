@@ -94,6 +94,29 @@ int version(){
 	return KYNEOUTILS_VERSION;
 }
 
+/**
+ * \fn 		<analogReadwithRef()>
+ * \pre 					{Requires analog measurement pin initialization.}
+ * \brief 					{Reads an specific analog channel.}
+ * \param 					{Analog reference (DEFAULT(3V3), INTERNAL1V1, INTERNAL2V56), analog channel (0 or 1)}
+ * \return 	<float>			{Voltage measurement (mV)}
+ * \note 					{Uses 3V3 as default reference and channel 1 as default one}
+ */
+float KyneoUtils::analogReadwithRef(int analogRef, int analogChannel){
+  float mV = 0;
+  int ref = 0;
+  
+  if(analogRef == 1)      ref = 3300;
+  else if(analogRef == 2) ref = 1100;
+  else if(analogRef == 3) ref = 2560;
+  else                    ref = 3300;
+
+  if(analogChannel == 0)  mV = ( (float)analogRead(A0) * ref / 1023 );
+  else                    mV = ( (float)analogRead(A1) * ref / 1023 );
+
+  return mV;
+}
+
 /*-----------------------------------------------------------------------------------------------------------
 											PRIVATE FUNTIONS
 ------------------------------------------------------------------------------------------------------------*/
