@@ -214,7 +214,7 @@ void KyneoGNSS::sendChar(char c){
  */
 void KyneoGNSS::DportInit(uint32_t bauds)
 {
-	// enable();	
+	enable();	
 	switch (bauds){
 		case 4800:
 		case 9600:
@@ -236,13 +236,11 @@ void KyneoGNSS::DportInit(uint32_t bauds)
 }
 
 /**
- * \fn 		<setDPortBaudrate(uint8_t modeIn, uint8_t modeOut, uint32_t bauds)>
- * \pre 	{GNSS software serial must be initialised first.}
- * \brief 	{Sends command PMTK250 for setting Secondary serial port rate and input/output type.}
- * \param 	<modeIn> 	{0: No data input, 1:RTCM input, 3: MTK NMEA}
- * 			<modeOut>	{0: No data output, 3: MTK NMEA}
- * 		  	<bauds> 	{The desired baudrate (4800,9600,14400,19200,38400,57600,115200)}
- * \return 	{ok: 3 if everything fine}
+ * \fn <setDPortBaudrate(uint8_t modeIn, uint8_t modeOut, uint32_t bauds)>
+ * \pre {GNSS software serial must be initialised first.}
+ * \brief {Sends command PMTK251 for setting NMEA serial port rate.}
+ * \param <bauds> {The desired baudrate. Valid values are 4800,9600,14400,19200,38400,57600,115200}
+ * \return {void}
  */
 int8_t KyneoGNSS::setDPortBaudrate(uint8_t modeIn, uint8_t modeOut, uint32_t bauds){
     char *cmd = (char*) malloc(MAX_CMD_SIZE);
