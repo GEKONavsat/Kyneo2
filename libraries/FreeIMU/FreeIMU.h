@@ -55,6 +55,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #if F_CPU == 16000000L
   #define FREEIMU_FREQ "16 MHz"
+#elif F_CPU == 12000000L
+  #define FREEIMU_FREQ "12 MHz"
 #elif F_CPU == 8000000L
   #define FREEIMU_FREQ "8 MHz"
 #endif
