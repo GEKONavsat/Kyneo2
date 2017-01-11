@@ -50,11 +50,9 @@ void setup()
   util.battInit();
   Wire.begin();
   kyneoIMU.init();
-  
   pinMode(GP_LED_0, OUTPUT);
   pinMode(GP_LED_1, OUTPUT);
   
-  gnss.init();
   //set rate divider(GPGLL, GPRMC, GPVTG, GPGGA, GPGSA, GPGSV, PMTKCHN). 
   gnss.setNMEAOutput(    0,     0,     0,     1,     0,     0,       0);          // Period of each NMEA message
                                                                           
@@ -87,7 +85,7 @@ void loop() {
     if (cmd == 'a' || cmd == 'A'){
       kyneoIMU.getYawPitchRoll(att);
       Serial.println();
-      Serial.print(" Yaw: ");
+      Serial.print("Yaw: ");
       Serial.print(att[0]);
       Serial.print(" Pitch: ");
       Serial.print(att[1]);
@@ -108,25 +106,25 @@ void loop() {
     }else if (cmd == 'r' || cmd == 'R'){
         kyneoIMU.getRawValues(raw);
         Serial.println("acc_x\tacc_y\tacc_z\tgyr_x\tgyr_y\tgyr_z\tmag_x\tmag_y\tmag_z\tTemp\tAlt"); 
-        Serial.print((float)raw[0]/2048, 2);        // acc_x
+        Serial.print((float)raw[0]/2048, 2);    // acc_x
         Serial.print("\t");
-        Serial.print((float)raw[1]/2048, 2);        // acc_y
+        Serial.print((float)raw[1]/2048, 2);    // acc_y
         Serial.print("\t");
-        Serial.print((float)raw[2]/2048, 2);        // acc_z
+        Serial.print((float)raw[2]/2048, 2);    // acc_z
         Serial.print("\t");
-        Serial.print((float)raw[3]/16.384, 2);      // gyr_x
+        Serial.print((float)raw[3]/16.384, 2);  //gyr_x
         Serial.print("\t");
-        Serial.print((float)raw[4]/16.384, 2);      // gyr_y
+        Serial.print((float)raw[4]/16.384, 2);  //gyr_y
         Serial.print("\t");
-        Serial.print((float)raw[5]/16.384, 2);      // gyr_z
+        Serial.print((float)raw[5]/16.384, 2);  //gyr_z
         Serial.print("\t");
-        Serial.print((float)raw[6]/1.707, 1);       // mag_x
+        Serial.print((float)raw[6]/1.707, 1);   //mag_x
         Serial.print("\t");
-        Serial.print((float)raw[7]/1.707, 1);       // mag_y
+        Serial.print((float)raw[7]/1.707, 1);   //mag_y
         Serial.print("\t");
-        Serial.print((float)raw[8]/1.707, 1);       // mag_z
+        Serial.print((float)raw[8]/1.707, 1);   //mag_z
         Serial.print("\t");
-        Serial.print(kyneoIMU.baro.getTemperature(MS561101BA_OSR_4096), 1); //temp
+        Serial.print(kyneoIMU.baro.getTemperature(MS561101BA_OSR_4096), 1);   //temp
         Serial.print("\t");
         Serial.println(kyneoIMU.getBaroAlt(), 2);   //pres
     }else if (cmd == 'b' || cmd == 'B'){
@@ -134,12 +132,11 @@ void loop() {
         Serial.println(util.battLevel());
     }else if (cmd == 'l' || cmd == 'L'){
         Serial.println("Blinking LEDs!!");
-        digitalWrite(GP_LED_0, HIGH);   // LEDs ON.
-        digitalWrite(GP_LED_1, HIGH);
-        delay(1000);
-        digitalWrite(GP_LED_0, LOW);    // LEDs OFF.
-        digitalWrite(GP_LED_1, LOW);
-        delay(1000);
+        digitalWrite(GP_LED_0, HIGH);   // LED0 ON.
+        digitalWrite(GP_LED_1, HIGH);   // LED1 ON.
+        delay(500);
+        digitalWrite(GP_LED_0, LOW);    // LED0 OFF.
+        digitalWrite(GP_LED_1, LOW);    // LED1 OFF.
     }else if (cmd == 'g' || cmd == 'G'){
       Serial.println("Location and time information: ");
         if(gnss.getLatLon(lat, lon) == 2){
