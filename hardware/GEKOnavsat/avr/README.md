@@ -18,4 +18,4 @@ https://github.com/JChristensen/mighty-1284p
 
 Platforms available:
 - Kyneo  - 1st version of Kyneo (16MHz, Vcc 5V), which comes with optiboot bootloader preloaded.
-- Kyneo2 - 2nd version of Kyneo (12MHz, Vcc 3.3V), which comes with optiboot bootloader preloaded.
+- Kyneo2 - 2nd version of Kyneo (12MHz, Vcc 3.3V), which comes with optiboot bootloader preloaded.  
