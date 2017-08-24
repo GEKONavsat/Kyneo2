@@ -4,11 +4,9 @@
  * \brief	Advanced library for GMS-G9 module, based on MT3333 core, the GNSS device present in Kyneo.
  *
  * \author	GEKO NavSat S.L. <info@gekonavsat.com>
- * \date	12/01/2015
- * \version	2.0         (-- especific for Kyneo2; NOT VALID FOR KYNEO 1.0 -- )
- * \modifications: Includes awaiting loops for response from the GNSS module.
- * \               Main serial comm with GNSS is via Serial1.
- * \               Second serial comm is via SoftwareSerial port (called DportSerial, mainly for RTCM corrections feeding).
+ * \date	09/06/2017
+ * \version	2.1         (-- especific for Kyneo2; NOT VALID FOR KYNEO 1.0 -- )
+ * \modifications: included updateGNSSdata()
  *
  ***************************************************************************************************************************/
 
@@ -104,7 +102,7 @@ class KyneoGNSS{
 		char DportAvailable();														// checks Dport receiving buffer
 		char DportRead();															// reads Dport receiving buffer
 		char DportWrite(uint8_t byte);												// sends a char via Dport
-		char DportPrint(const char* buf);											// sends a char* via Dport
+		char DportPrint(char buf);											// sends a char* via Dport
 		char DportPrintln(const char* buf);											// sends a char* (with an added newline feed) via Dport
 			
 		// GNSS especific functions
@@ -141,6 +139,7 @@ class KyneoGNSS{
 		int getNMEA(char *frame, int length, unsigned int timeout, int numFrames);
 				
 				// using NMEA parser functions
+		int updateGNSSdata();														// updates the main objets atributes
 		int getLatLon(float &lat, float &lon);										// extracts latitude and longitude from NMEA frame
 		uint32_t getutime();														// gets time in Unix format
 	  	void gettime(char *frame);													// gets time in char format

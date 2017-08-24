@@ -4,8 +4,8 @@
  * \brief	This file is a simple library for using gms-g9, the GNSS device present in Kyneo.
  *
  * \author	GEKO NavSat S.L. <info@gekonavsat.com>
- * \date	12/01/2015
- * \version	2.0
+ * \date	09/06/20175
+ * \version	2.1
  *************************************************************************************************/ 
 
 #include "KyneoGNSS.h"
@@ -311,7 +311,7 @@ char KyneoGNSS::DportWrite(uint8_t byte) { return DportSerial.write(byte); }
  * \brief {Sends a char* via the DportSerial port (same as DportWrite).}
  * \return {char}
  */
-char KyneoGNSS::DportPrint(const char* buf) { return DportSerial.print(buf); }
+char KyneoGNSS::DportPrint(char buf) { return DportSerial.print(buf); }
 
 /**
  * \fn <DportPrintln()>
@@ -719,9 +719,10 @@ int KyneoGNSS::getNMEAtype(char *frame, int length, char *type){
  * \return 	0 if frame it not valid, 3 if it's valid
  */
 int KyneoGNSS::getNMEAlatlon(char *frame, int length){
-	int ok = 0;
+	int ok = 0, ok2 = 0;
 	
 	ok = AuxGetNMEA(frame, length, 0, 0);
+	ok2 = nmea.parseNMEA(frame);
 	
 	if(ok != 0){
 		if(frame[3]=='G' && frame[4]=='G' && frame[5]=='A'){
@@ -887,6 +888,29 @@ int KyneoGNSS::getNMEA(char *frame, int length){
  */
 int KyneoGNSS::getNMEA(char *frame, int length, unsigned int timeout, int numFrames){
 	return AuxGetNMEA(frame, length, timeout, numFrames);
+}
+
+/**
+ * \fn 		<updateGNSSdata()>
+ * \pre 	{GNSS software serial must be initialised first.}
+ * \brief 	{Gets all NMEA frames transmitted from GNSS module inside the defined timeout window.}
+ * \param 	Char buffer where the NMEA frames are going to be written.
+ * \return 	number of chars written to the frame (only whole NMEA frames)
+ */
+int KyneoGNSS::updateGNSSdata(){
+	char frame[100];
+	int ok = 0;
+	
+	int frameON = getNMEAlatlon(frame, 100);
+	if(frameON != 0){								// frame received
+		ok = 1;
+		if( nmea.parseNMEA(frame) == 0 ){			// frame parsed to nmea object
+			ok = 2;
+		}
+	}
+	
+	//free(frame);
+	return ok;
 }
 
 /**
@@ -1143,8 +1167,12 @@ int KyneoGNSS::AuxGetNMEA(char *frame, int length, unsigned int timeout, int num
 	while( eot==0 ){
 		if( Serial1.available() ){
 			c = Serial1.read();
+			//Serial.print(c);
 			
-			if(go==0 && c=='$') go = 1;
+			if(c=='$'){
+				go = 1;
+				pos = 0;
+			}
 			
 			if(go==1){
 				frame[pos++] = c;
