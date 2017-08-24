@@ -1,4 +1,4 @@
-# GEKO Navsat Hardware Specification for Arduino
+#  GEKO Navsat Hardware Specification for Arduino
 This repository holds all the files for GEKO 3rd party Arduino-compatible boards.
 The repository is structured following the recommendations in arduino.cc
 
