@@ -41,7 +41,7 @@ void setup()
 
   //set rate divider(GPGLL, GPRMC, GPVTG, GPGGA, GPGSA, GPGSV, PMTKCHN). 
   gnss.setNMEAOutput(    0,     1,     5,     0,     0,     0,       0);  //GPRMC 1Hz, GPVTG 0.2Hz
-
+  
 }
 
 void loop()

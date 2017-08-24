@@ -14,6 +14,7 @@
  * 
  * With this sketch is possible to test the main features of Kyneo, using following commands:
  * 
+ * H.- Hello waving
  * A.- Euler Angles values
  * Q.- quaternion values
  * R.- Raw IMU sensors data
@@ -37,6 +38,7 @@ float q[4];
 float lat, lon;
 int raw[9];
 int headprint = 10;
+int counter = 9;
       
 FreeIMU kyneoIMU;           // FreeIMU object
 KyneoGNSS gnss;             // Kyneo GNSS object
@@ -52,9 +54,10 @@ void setup()
   kyneoIMU.init();
   pinMode(GP_LED_0, OUTPUT);
   pinMode(GP_LED_1, OUTPUT);
-  
+
+  Serial1.begin(9600);  // Default baudrate to connect with GNSS module
   //set rate divider(GPGLL, GPRMC, GPVTG, GPGGA, GPGSA, GPGSV, PMTKCHN). 
-  gnss.setNMEAOutput(    0,     0,     0,     1,     0,     0,       0);          // Period of each NMEA message
+  gnss.setNMEAOutput(    0,     1,     0,     1,     0,     0,       0);          // Period of each NMEA message
                                                                           
   Serial.println("done!");
   Serial.println("--------------------------------------------");
@@ -66,6 +69,7 @@ void loop() {
     Serial.println();
     Serial.println("Choose one of the following options:");
     Serial.println("    ");
+    Serial.println("    H.- Hello");
     Serial.println("    A.- Euler Angles values");
     Serial.println("    Q.- quaternion values");
     Serial.println("    R.- Raw IMU sensors data");
@@ -73,6 +77,7 @@ void loop() {
     Serial.println("    L.- Blinking LEDs");
     Serial.println("    G.- Location and time information");
     Serial.println("    N.- Last received NMEA frame");
+    Serial.println("    - Send any command to stop");
     Serial.println();
     
     while(!Serial.available());                  // Waits for user command
@@ -82,30 +87,45 @@ void loop() {
     count = 0;
     options = 1;
   }else{
-    if (cmd == 'a' || cmd == 'A'){
-      kyneoIMU.getYawPitchRoll(att);
-      Serial.println();
-      Serial.print("Yaw: ");
-      Serial.print(att[0]);
-      Serial.print(" Pitch: ");
-      Serial.print(att[1]);
-      Serial.print(" Roll: ");
-      Serial.print(att[2]);
-      Serial.println("");
+
+    if(cmd == 'h'|| cmd == 'H') {
+      Serial.println("Hello user! You are running a GEKO NAVSAT example, thank you");
+      
+    }else if (cmd == 'a' || cmd == 'A'){
+      while(!Serial.available()){
+        kyneoIMU.getYawPitchRoll(att);
+        Serial.print("Yaw: ");
+        Serial.print(att[0]);
+        Serial.print(" Pitch: ");
+        Serial.print(att[1]);
+        Serial.print(" Roll: ");
+        Serial.print(att[2]);
+        Serial.println("");
+      }
+      
     }else if (cmd == 'q' || cmd == 'Q'){
-      Serial.println();
-      Serial.println("q0\tq1\tq2\tq3"); 
-      kyneoIMU.getQ(q);
-      Serial.print(q[0]);
-      Serial.print("\t");
-      Serial.print(q[1]);
-      Serial.print("\t");
-      Serial.print(q[2]);
-      Serial.print("\t");
-      Serial.println(q[3]);
+
+      while(!Serial.available()){
+        kyneoIMU.getQ(q);
+        Serial.print("  q0: ");
+        Serial.print(q[0]);
+        Serial.print("  q1: ");
+        Serial.print(q[1]);
+        Serial.print("  q2: ");
+        Serial.print(q[2]);
+        Serial.print("  q3: ");
+        Serial.println(q[3]);
+      }
+      
     }else if (cmd == 'r' || cmd == 'R'){
+      while(!Serial.available()){
+        counter++;
+        if(counter == 10){              // Prints column titles every 10 lines
+          counter = 0;
+          Serial.println("acc_x\tacc_y\tacc_z\tgyr_x\tgyr_y\tgyr_z\tmag_x\tmag_y\tmag_z\tTemp\tAlt");  
+        }
+  
         kyneoIMU.getRawValues(raw);
-        Serial.println("acc_x\tacc_y\tacc_z\tgyr_x\tgyr_y\tgyr_z\tmag_x\tmag_y\tmag_z\tTemp\tAlt"); 
         Serial.print((float)raw[0]/2048, 2);    // acc_x
         Serial.print("\t");
         Serial.print((float)raw[1]/2048, 2);    // acc_y
@@ -127,37 +147,159 @@ void loop() {
         Serial.print(kyneoIMU.baro.getTemperature(MS561101BA_OSR_4096), 1);   //temp
         Serial.print("\t");
         Serial.println(kyneoIMU.getBaroAlt(), 2);   //pres
+      }
+      
     }else if (cmd == 'b' || cmd == 'B'){
+      while(!Serial.available()){
         Serial.print("Battery level (mV): ");
         Serial.println(util.battLevel());
-    }else if (cmd == 'l' || cmd == 'L'){
-        Serial.println("Blinking LEDs!!");
-        digitalWrite(GP_LED_0, HIGH);   // LED0 ON.
-        digitalWrite(GP_LED_1, HIGH);   // LED1 ON.
         delay(500);
-        digitalWrite(GP_LED_0, LOW);    // LED0 OFF.
-        digitalWrite(GP_LED_1, LOW);    // LED1 OFF.
+      }
+      
     }else if (cmd == 'g' || cmd == 'G'){
-      Serial.println("Location and time information: ");
-        if(gnss.getLatLon(lat, lon) == 2){
+      while(!Serial.available()){
+        gnss_idx = gnss.getLatLon(lat, lon);
+        if(gnss_idx == 2){
           gnss.getdate(day);
           gnss.gettime(hour);
-          Serial.print("    Fecha:    ");
+      
+          Serial.println("--------------------");
+          Serial.print("Fecha:    ");
           Serial.println(day);
-          Serial.print("    Hora:     ");
+          Serial.print("Hora:     ");
           Serial.println(hour);
-          Serial.print("    Latitud:  ");
-          Serial.println(gnss.getlat());
-          Serial.print("    Longitud: ");
-          Serial.println(gnss.getlon());
-          Serial.print("    Altitud:  ");
+          Serial.print("Latitud:  ");
+          Serial.println(gnss.getlat(),6);
+          Serial.print("Longitud: ");
+          Serial.println(gnss.getlon(),6);
+          Serial.print("Altitud:  ");
           Serial.println(gnss.getalt());
         }else{
           Serial.println("No GNSS information read...");
         }
+      }
+      
     }else if (cmd == 'n' || cmd == 'N'){
-      Serial.println("Last NMEA frame received:");
-      if( gnss.getSingleNMEA(frame, 100)!=0 ) Serial.println(frame);
+      while(!Serial.available()){
+        if(gnss.getSingleNMEA(frame, 100)!=0){
+          Serial.print("NMEA received: ");
+          Serial.print(frame);
+        }else{
+          Serial.println("No NMEA frame received");
+        }
+      }
+
+    }else if (cmd == 'l' || cmd == 'L'){
+      while(!Serial.available()){
+        Serial.println("Blinking LEDs!, (wair for whole message)");
+        digitalWrite(GP_LED_0, HIGH);   // LED0 ON.
+        delay(750);
+        digitalWrite(GP_LED_0, LOW);    // LED0 OFF.
+        delay(250);
+        digitalWrite(GP_LED_0, HIGH);   // LED0 ON.
+        delay(750);
+        digitalWrite(GP_LED_0, LOW);    // LED0 OFF.
+        delay(250);
+        digitalWrite(GP_LED_0, HIGH);   // LED0 ON.
+        delay(250);
+        digitalWrite(GP_LED_0, LOW);    // LED0 OFF.
+        delay(750);
+
+        digitalWrite(GP_LED_0, HIGH);   // LED0 ON.
+        delay(250);
+        digitalWrite(GP_LED_0, LOW);    // LED0 OFF.
+        delay(750);
+
+        digitalWrite(GP_LED_0, HIGH);   // LED0 ON.
+        delay(750);
+        digitalWrite(GP_LED_0, LOW);    // LED0 OFF.
+        delay(250);
+        digitalWrite(GP_LED_0, HIGH);   // LED0 ON.
+        delay(250);
+        digitalWrite(GP_LED_0, LOW);    // LED0 OFF.
+        delay(250);
+        digitalWrite(GP_LED_0, HIGH);   // LED0 ON.
+        delay(750);
+        digitalWrite(GP_LED_0, LOW);    // LED0 OFF.
+        delay(750);
+
+        digitalWrite(GP_LED_0, HIGH);   // LED0 ON.
+        delay(750);
+        digitalWrite(GP_LED_0, LOW);    // LED0 OFF.
+        delay(250);
+        digitalWrite(GP_LED_0, HIGH);   // LED0 ON.
+        delay(750);
+        digitalWrite(GP_LED_0, LOW);    // LED0 OFF.
+        delay(250);
+        digitalWrite(GP_LED_0, HIGH);   // LED0 ON.
+        delay(750);
+        digitalWrite(GP_LED_0, LOW);    // LED0 OFF.
+        delay(1500);
+
+        
+        digitalWrite(GP_LED_1, HIGH);   // LED0 ON.
+        delay(750);
+        digitalWrite(GP_LED_1, LOW);    // LED0 OFF.
+        delay(250);
+        digitalWrite(GP_LED_1, HIGH);   // LED0 ON.
+        delay(250);
+        digitalWrite(GP_LED_1, LOW);    // LED0 OFF.
+        delay(750);
+
+        digitalWrite(GP_LED_1, HIGH);   // LED0 ON.
+        delay(250);
+        digitalWrite(GP_LED_1, LOW);    // LED0 OFF.
+        delay(250);
+        digitalWrite(GP_LED_1, HIGH);   // LED0 ON.
+        delay(750);
+        digitalWrite(GP_LED_1, LOW);    // LED0 OFF.
+        delay(750);
+
+        digitalWrite(GP_LED_1, HIGH);   // LED0 ON.
+        delay(250);
+        digitalWrite(GP_LED_1, LOW);    // LED0 OFF.
+        delay(250);
+        digitalWrite(GP_LED_1, HIGH);   // LED0 ON.
+        delay(250);
+        digitalWrite(GP_LED_1, LOW);    // LED0 OFF.
+        delay(250);
+        digitalWrite(GP_LED_1, HIGH);   // LED0 ON.
+        delay(250);
+        digitalWrite(GP_LED_1, LOW);    // LED0 OFF.
+        delay(250);
+        digitalWrite(GP_LED_1, HIGH);   // LED0 ON.
+        delay(750);
+        digitalWrite(GP_LED_1, LOW);    // LED0 OFF.
+        delay(750);
+
+        digitalWrite(GP_LED_1, HIGH);   // LED0 ON.
+        delay(250);
+        digitalWrite(GP_LED_1, LOW);    // LED0 OFF.
+        delay(250);
+        digitalWrite(GP_LED_1, HIGH);   // LED0 ON.
+        delay(250);
+        digitalWrite(GP_LED_1, LOW);    // LED0 OFF.
+        delay(250);
+        digitalWrite(GP_LED_1, HIGH);   // LED0 ON.
+        delay(250);
+        digitalWrite(GP_LED_1, LOW);    // LED0 OFF.
+        delay(750);
+
+        digitalWrite(GP_LED_1, HIGH);   // LED0 ON.
+        delay(250);
+        digitalWrite(GP_LED_1, LOW);    // LED0 OFF.
+        delay(250);
+        digitalWrite(GP_LED_1, HIGH);   // LED0 ON.
+        delay(750);
+        digitalWrite(GP_LED_1, LOW);    // LED0 OFF.
+        delay(750);
+
+        digitalWrite(GP_LED_1, HIGH);   // LED0 ON.
+        delay(750);
+        digitalWrite(GP_LED_1, LOW);    // LED0 OFF.
+        delay(1500);
+      }
+      
     }else{
       Serial.println("Command not found");
     }
@@ -165,4 +307,3 @@ void loop() {
     options = 0;
   }
 }
-

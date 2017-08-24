@@ -910,7 +910,7 @@ int KyneoGNSS::getLatLon(float &lat, float &lon){
 		}
 	}
 	
-	free(frame);
+	//free(frame);
 	return ok;
 }
 
@@ -1099,9 +1099,9 @@ int8_t KyneoGNSS::checkResponse(char *x){
 int KyneoGNSS::AuxGetSingleNMEA(char *frame, int length, unsigned int timeout){
 	int pos=0, frameON=0, eot=0;
 	char c;
-	unsigned int now = 0;
+	//unsigned int now = 0;								//time limit deleted due to memory problems
 	
-	now = millis();
+	//now = millis();
 			
 	while( (frameON == 0) && (eot==0) ){
 		if( Serial1.available() ){
@@ -1116,7 +1116,7 @@ int KyneoGNSS::AuxGetSingleNMEA(char *frame, int length, unsigned int timeout){
 			}
 		}
 		
-		if( ( millis() - now ) > timeout ) eot = 1;		// timeout ended without response
+		//if( ( millis() - now ) > timeout ) eot = 1;		// timeout ended without response
 	}
 	
 	return (pos * frameON);								// positive OK, negative means overflow, zero means no record and timeout
@@ -1132,13 +1132,13 @@ int KyneoGNSS::AuxGetSingleNMEA(char *frame, int length, unsigned int timeout){
 int KyneoGNSS::AuxGetNMEA(char *frame, int length, unsigned int timeout, int numFrames){
 	int pos=0, lastend=0, overf=1, eot=0, num=0, go=0;
 	char c;
-	unsigned int now = 0;
+	//unsigned int now = 0;						// Time limit deletesd due to memory problems
 	
 	length--;									// let the last position be free
 	if(numFrames == 0) numFrames = 1;			// default value, to avoid being numFrames dependent
 	if(timeout == 0) timeout = TIMEOUT;			// default value
 	
-	now = millis();
+	//now = millis();
 			
 	while( eot==0 ){
 		if( Serial1.available() ){
@@ -1158,7 +1158,9 @@ int KyneoGNSS::AuxGetNMEA(char *frame, int length, unsigned int timeout, int num
 			}
 		}
 		
-		if( ( ( millis() - now ) > timeout ) || ( num == numFrames ) || (overf == -1) ){	// timeout ended
+		
+		//if( ( ( millis() - now ) > timeout ) || ( num == numFrames ) || (overf == -1) ){	// timeout ended
+		if((num == numFrames) || (overf == -1) ){
 			if(lastend != 0) frame[lastend] = (char)0;
 			eot = 1;
 		}

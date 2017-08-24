@@ -56,9 +56,9 @@ void loop()
     Serial.print("Hora:     ");
     Serial.println(hour);
     Serial.print("Latitud:  ");
-    Serial.println(gnss.getlat());
+    Serial.println(gnss.getlat(),6);
     Serial.print("Longitud: ");
-    Serial.println(gnss.getlon());
+    Serial.println(gnss.getlon(),6);
     Serial.print("Altitud:  ");
     Serial.println(gnss.getalt());
   }else{
