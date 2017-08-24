@@ -23,3 +23,5 @@ Platforms available:
 - Kyneo  - 1st version of Kyneo (16MHz, Vcc 5V), which comes with optiboot bootloader preloaded. (not compatible 
 with these libraries; look for the Kyneo1 specific libraries)
 - Kyneo2 - 2nd version of Kyneo (12MHz, Vcc 3.3V), which comes with optiboot bootloader preloaded.
+
+Projets website: http://kyneo.eu/
