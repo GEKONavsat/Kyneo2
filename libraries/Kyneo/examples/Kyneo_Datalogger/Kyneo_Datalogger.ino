@@ -1,118 +1,137 @@
 /**************************************************************************************************
- * Kineo Datalogger Example.
+ * Kyneo data logger Example
  * 
- * Created on 2017 by GEKO Navsat S.L.
+ * This Example will show how to record data from the kyneo sensors on a mounted SD card
  * 
- * This example is free software, given under a GPL3 license.
+ * Created by GEKO Navsat S.L. for Kyneo V2.0 board
  * 
- * KYNEO is an Arduino-compliant board which includes Movement & Location Sensors and a GNSS device. 
- * All these sensors' data can be logged into an micro-SD or, if a XBee compatible RF module is 
- * attached, they can be wirelessly shared among other devices within the network.
+ * This example is free software, given under a GPL3 license
  * 
- * Kyneo is a product designed by GEKO Navsat S.L. 
- * http://www.gekonavsat.com
- * 
- * This simple sketch uses Kineo board to make a log of EGI (Embeded GNSS INS) data, that is 
- * composed by GNSS position (lat, lon, alt) and inertial attitude (Euler angles). The data
- * is stored in a .txt file.
+ * KYNEO is a product designed by GEKO Navsat S.L. in Europe http://www.gekonavsat.com
+ * For further information, visit: http://kyneo.eu/
  * 
  *************************************************************************************************/
-#include <KyneoBoard.h>
-#include <KyneoGNSS.h>
-#include "KyneoUtils.h"
-#include "FreeIMU.h"
 
-#include <Wire.h>
-#include <SPI.h>
+#include <KyneoBoard.h>                                                                                     // GekoNavsat libraries
+#include <KyneoGNSS.h>
+#include <KyneoUtils.h>
+#include <FreeIMU.h>
+
+#include <SPI.h>                                                                                            // Other libraries
 #include <SD.h>
 
-FreeIMU kyneoIMU;  // FreeIMU object
-KyneoGNSS gnss;    // Kyneo GNSS object      
-KyneoUtils util;   // Kyneo parser object
+FreeIMU kyneoIMU;                                                                                           // Object definition
+KyneoGNSS gnss;         
+KyneoUtils util;   
 
-float att[3];
-float kyneoLat = 0.0;
-float kyneoLon = 0.0;
-float kyneoAlt = 0.0;
+float att[3];                                                                                               // Variable definition
+float kyneoLat;
+float kyneoLon;
+float kyneoAlt;
 char kyneoTime[10];
-int gnss_idx = 0;
 
 char file[12];
-char frame[100];
 
 void setup()
 {  
-  Serial.begin(9600);
+  Serial.begin(9600);                                                                                       // Initial setup
+  delay(100);
   Serial.println("Setting up... ");
-
-  Wire.begin();
-  kyneoIMU.init();
+ 
   pinMode(GP_LED_0, OUTPUT);
   pinMode(GP_LED_1, OUTPUT);
   
+  Wire.begin();
+  kyneoIMU.init();
+  
   Serial1.begin(9600);
+  delay(100);
   //set rate divider(GPGLL, GPRMC, GPVTG, GPGGA, GPGSA, GPGSV, PMTKCHN). 
-  gnss.setNMEAOutput(    0,     0,     0,     1,     0,     0,       0);  //Period of each NMEA message
+  gnss.setNMEAOutput(    0,     0,     0,     1,     0,     0,       0);                                     // Period of each NMEA message
+  //gnss.DisSBAS();
+  //gnss.setFixRate(100); //milliseconds (100 - 10000)
+
+  delay(100);
   
   uint8_t retries = 3;
   uint8_t filenum = 0;
   while(retries-- > 0){
-    if (!SD.begin(SD_CS_PIN)) {
-      Serial.println("SD card failed, or not present");
-    }else{
+    if (!SD.begin(SD_CS_PIN)) {                                                                              // SD card setup
+      Serial.println("SD card failed, or not present");                                                   
+    }
+    else{
       Serial.println("SD card ready.");
       do{
-        sprintf(file, "data%03u.csv", filenum++);      
-      }while(SD.exists(file));   
+        sprintf(file, "data%03u.txt", filenum++);      
+      }
+      while(SD.exists(file));   
       Serial.print("Data will be logged to file: ");
       Serial.println(file);
       break;
     }
   }
-  delay(500);
 }
 
 void loop()
 {
-  gnss_idx = gnss.getLatLon(kyneoLat, kyneoLon);
-  
-  if(gnss_idx == 2){
-    digitalWrite(GP_LED_0, HIGH);   // LED0 ON. 
-    kyneoIMU.getYawPitchRoll(att);
-    kyneoAlt = gnss.getalt();
+  if(gnss.getLatLon(kyneoLat, kyneoLon) == 2){                                                               // Write the GNSS and IMU data if abailable
+     
     gnss.gettime(kyneoTime);
-    
-    File log = SD.open(file, FILE_WRITE);
-    if(log){
-      delay(50);
-      log.print(att[0]);        //Yaw
-      log.print(",");
-      log.print(att[1]);        //Pitch
-      log.print(",");
-      log.print(att[2]);        //Roll
-      log.print(",");
-      log.print(kyneoLat,6);    //Latitude
-      log.print(",");
-      log.print(kyneoLon,6);    //Longitude
-      log.print(",");
-      log.print(kyneoAlt);      //Altitude
-      log.print(",");
-      log.println(kyneoTime);   //Time
-      delay(50);
-      log.close();
-      Serial.println("data logged");
-      
-    }else{
-      Serial.println("Error logging data: log=0");
-    }
-    delay(100);
-    digitalWrite(GP_LED_0, LOW);    // LED0 OFF.
+    kyneoAlt = gnss.getalt();   
+    kyneoIMU.getYawPitchRoll(att);
 
+    File log = SD.open(file, FILE_WRITE);
+    if(log == 0){
+      Serial.println("Error logging data: log = 0");
+    }else{
+      
+      digitalWrite(GP_LED_0, HIGH);
+      
+      log.print(att[0]);
+      log.print(",");
+      log.print(att[1]);
+      log.print(",");
+      log.print(att[2]);
+      log.print(",");
+      log.print(kyneoLat,6);
+      log.print(",");
+      log.print(kyneoLon,6);
+      log.print(",");
+      log.print(kyneoAlt);
+      log.print(",");
+      log.print(kyneoTime);
+      log.println(";");
+      
+      log.close();
+      Serial.println("IMU and GNSS data logged");
+  
+      digitalWrite(GP_LED_0, LOW);
+    }
   }else{
-    digitalWrite(GP_LED_1, HIGH);   // LED1 ON.
-    Serial.println("no data to log");
-    delay(200);
-    digitalWrite(GP_LED_1, LOW);    // LED1 OFF.
+                                                                                                             // Write the IMU data only if GNSS is not abailable
+    kyneoIMU.getYawPitchRoll(att);
+
+    File log = SD.open(file, FILE_WRITE);
+    if(log == 0){
+      Serial.println("Error logging data: log=0");
+    }else{
+      
+      digitalWrite(GP_LED_1, HIGH);
+          
+      log.print(att[0]);
+      log.print(",");
+      log.print(att[1]);
+      log.print(",");
+      log.print(att[2]);
+      log.println(",,,,;");
+      
+      log.close();
+      Serial.println("IMU data logged, no GNSS data");
+      
+      digitalWrite(GP_LED_1, LOW);
+    }
   }
+  
+  delay(100);
 }
 
