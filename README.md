@@ -6,7 +6,6 @@ Instructions:
 
 	- If it's opened, close the Arduino IDE
 	- Open the "hardware" folder and copy "GEKOnavsat" into your user's /Documents/Arduino/hardware folder.
-	- Open the "libraries" folder and copy all it's content into your user's /Documents/Arduino/libraries folder.
 	- Open the Arduino IDE again and... ready to work with Kyneo
 
 Last tested Arduino IDE Version: 1.6.12
